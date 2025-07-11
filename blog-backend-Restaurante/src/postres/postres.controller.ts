@@ -1,26 +1,35 @@
 import {
-  Controller, Get, Post, Put, Delete, Body, Param,
-  Query, BadRequestException, NotFoundException,
-  UseInterceptors, UploadedFile,
-  InternalServerErrorException
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Body,
+  Param,
+  Query,
+  BadRequestException,
+  NotFoundException,
+  UseInterceptors,
+  UploadedFile,
+  InternalServerErrorException,
 } from '@nestjs/common';
-import { PostresService } from './postres.service';
-import { SuccessResponseDto } from 'src/common/dto/response.dto';
-import { Pagination } from 'nestjs-typeorm-paginate';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { Postre } from './postres.entity';
+import { postresService } from './postres.service';
 import { CreatePostreDto } from './dto/create_postres';
 import { UpdatePostreDto } from './dto/update_postres';
+import { SuccessResponseDto } from 'src/common/dto/response.dto';
+import { Pagination } from 'nestjs-typeorm-paginate';
+import { Postre } from './postres.entity';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 
-@Controller('Postres')
-export class PostresController {
-  constructor(private readonly PostresService: PostresService) { }
+@Controller('postres')
+export class postresController {
+  constructor(private readonly postresService: postresService) {}
 
   @Post()
   async create(@Body() dto: CreatePostreDto) {
-    const Postre = await this.PostresService.create(dto);
-    return new SuccessResponseDto('Postre created successfully', Postre);
+    const postre = await this.postresService.create(dto);
+    return new SuccessResponseDto('postre creada exitosamente', postre);
   }
 
   @Get()
@@ -29,53 +38,75 @@ export class PostresController {
     @Query('limit') limit = 10,
     @Query('isActive') isActive?: string,
   ): Promise<SuccessResponseDto<Pagination<Postre>>> {
-    if (isActive !== undefined && isActive !== 'true' && isActive !== 'false') {
-      throw new BadRequestException('Invalid value for "isActive". Use "true" or "false".');
+    if (
+      isActive !== undefined &&
+      isActive !== 'true' &&
+      isActive !== 'false'
+    ) {
+      throw new BadRequestException(
+        'Valor inválido para "isActive". Usa "true" o "false".',
+      );
     }
-    const result = await this.PostresService.findAll({ page, limit }, isActive === 'true');
-    if (!result) throw new InternalServerErrorException('Could not retrieve Postres');
 
-    return new SuccessResponseDto('Postres retrieved successfully', result);
+    const result = await this.postresService.findAll(
+      { page, limit },
+      isActive === 'true' ? true : isActive === 'false' ? false : undefined,
+    );
+
+    if (!result)
+      throw new InternalServerErrorException('No se pudieron obtener las postres');
+
+    return new SuccessResponseDto('postres obtenidas exitosamente', result);
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    const Postre = await this.PostresService.findOne(id);
-    if (!Postre) throw new NotFoundException('Postre not found');
-    return new SuccessResponseDto('Postre retrieved successfully', Postre);
+    const postre = await this.postresService.findOne(id);
+    if (!postre) throw new NotFoundException('postre no encontrada');
+    return new SuccessResponseDto('postre obtenida exitosamente', postre);
   }
 
   @Put(':id')
   async update(@Param('id') id: string, @Body() dto: UpdatePostreDto) {
-    const Postre = await this.PostresService.update(id, dto);
-    if (!Postre) throw new NotFoundException('Postre not found');
-    return new SuccessResponseDto('Postre updated successfully', Postre);
+    const postre = await this.postresService.update(id, dto);
+    if (!postre) throw new NotFoundException('postre no encontrada');
+    return new SuccessResponseDto('postre actualizada exitosamente', postre);
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    const Postre = await this.PostresService.remove(id);
-    if (!Postre) throw new NotFoundException('Postre not found');
-    return new SuccessResponseDto('Postre deleted successfully', Postre);
+    const postre = await this.postresService.remove(id);
+    if (!postre) throw new NotFoundException('postre no encontrada');
+    return new SuccessResponseDto('postre eliminada exitosamente', postre);
   }
 
   @Put(':id/profile')
-  @UseInterceptors(FileInterceptor('profile', {
-    storage: diskStorage({
-      destination: './public/profile',
-      filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`)
+  @UseInterceptors(
+    FileInterceptor('profile', {
+      storage: diskStorage({
+        destination: './public/profile',
+        filename: (req, file, cb) =>
+          cb(null, `${Date.now()}-${file.originalname}`),
+      }),
+      fileFilter: (req, file, cb) => {
+        if (!file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
+          return cb(
+            new BadRequestException('Solo se permiten archivos JPG o PNG'),
+            false,
+          );
+        }
+        cb(null, true);
+      },
     }),
-    fileFilter: (req, file, cb) => {
-      if (!file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
-        return cb(new BadRequestException('Only JPG or PNG files are allowed'), false);
-      }
-      cb(null, true);
-    }
-  }))
-  async uploadProfile(@Param('id') id: string, @UploadedFile() file: Express.Multer.File) {
-    if (!file) throw new BadRequestException('Profile image is required');
-    const Postre = await this.PostresService.updateProfile(id, file.filename);
-    if (!Postre) throw new NotFoundException('Postre not found');
-    return new SuccessResponseDto('Profile image updated', Postre);
+  )
+  async uploadProfile(
+    @Param('id') id: string,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    if (!file)
+      throw new BadRequestException('Se requiere una imagen de perfil');
+    const postre = await this.postresService.updateProfile(id, file.filename);
+    if (!postre) throw new NotFoundException('postre no encontrada');
+    return new SuccessResponseDto('Imagen de perfil actualizada', postre);
   }
 }
