@@ -38,7 +38,7 @@ export class postresService {
   }
 
   async update(id: string, dto: UpdatePostreDto): Promise<Postre | null> {
-    const postre = await this.postreRepository.findOne({ Where: { id } });
+    const postre = await this.postreRepository.findOne({ where: { id } });
     if (!postre) return null;
 
     Object.assign(postre, dto);

@@ -19,7 +19,7 @@ jobs:
         username: ${{ secrets.VPS_USER }}
         key: ${{ secrets.VPS_KEY }}
         source: "."
-        target: "/root/paredes_erick/pagina_backend"
+        target: "/root/corella_esteban/Restaurante_backend"
 
     - name: Run deploy commands on VPS
       uses: appleboy/ssh-action@v1.0.3
@@ -28,15 +28,15 @@ jobs:
         username: ${{ secrets.VPS_USER }}
         key: ${{ secrets.VPS_KEY }}
         script: |
-          cd /root/paredes_erick/pagina_backend
-           # Matar el proceso que está usando el puerto 3014
-          echo "Matar proceso en el puerto 3014..."
-          sudo lsof -t -i:3014 | xargs sudo kill -9
+          cd /root/corella_esteban/Restaurante_backend
+           # Matar el proceso que está usando el puerto 3000
+          echo "Matar proceso en el puerto 3000..."
+          sudo lsof -t -i:3000 | xargs sudo kill -9
           
           echo -e "${{ secrets.ENV_FILE }}" > .env
           npm install
           npm run build
           # Reiniciar PM2 con el nuevo código
-          pm2 stop estadisticas-api || true
-          pm2 delete estadisticas-api || true
-          pm2 start dist/main.js --name estadisticas-api
+          pm2 stop restaurante-api || true
+          pm2 delete restaurante-api || true
+          pm2 start dist/main.js --name restaurante-api
