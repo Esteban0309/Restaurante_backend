@@ -39,4 +39,4 @@ jobs:
           # Reiniciar PM2 con el nuevo código
           pm2 stop restaurante-api || true
           pm2 delete restaurante-api || true
-          pm2 start dist/main.js --name restaurante-api
+          pm2 start dist/src/main.js --name restaurante-api
