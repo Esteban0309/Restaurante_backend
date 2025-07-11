@@ -1,23 +1,25 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Type } from 'class-transformer';
+import { IsOptional, IsString, IsNumber, IsBoolean } from 'class-validator';
 
-
-@Entity('dishes')  
 export class UpdatebebidaDto {
-  @PrimaryGeneratedColumn('uuid')
+  @IsOptional()
+  @IsString()
   nombre?: string;
 
-  @Column('decimal')
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber({ maxDecimalPlaces: 2 }, { message: 'precio must be a valid decimal number with up to 2 decimal places' })
   precio?: number;
 
-  @Column()
+  @IsOptional()
+  @IsString()
   tipo?: string;
 
-  @Column({ nullable: true })
+  @IsOptional()
+  @IsString()
   descripcion?: string;
 
-  @Column({ default: true })
+  @IsOptional()
+  @IsBoolean()
   disponibilidad?: boolean;
-
-
 }
-

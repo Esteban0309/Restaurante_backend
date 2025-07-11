@@ -1,24 +1,31 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { IsString, IsNumber, IsOptional, IsBoolean } from 'class-validator';
 
-
-@Entity('dishes')
-export class UpdatepostreDto {
-  @PrimaryGeneratedColumn('uuid')
+export class UpdatePostreDto {
+  @IsOptional()
+  @IsString()
   nombre?: string;
 
-  @Column()
+  @IsOptional()
+  @IsNumber()
   precio?: number;
 
-  @Column()
+  @IsOptional()
+  @IsString()
   tipo?: string;
 
-  @Column()
+  @IsOptional()
+  @IsString()
   descripcion?: string;
-  
-  @Column({ nullable: true })
-  Porciones?: string; 
 
-  @Column({ default: true })
+  @IsOptional()
+  @IsString()
+  porciones?: string;
+
+  @IsOptional()
+  @IsBoolean()
   disponibilidad?: boolean;
 
+  @IsOptional()
+  @IsString()
+  profile?: string;
 }

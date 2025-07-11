@@ -6,96 +6,57 @@ import {
   IPaginationOptions,
   Pagination,
 } from 'nestjs-typeorm-paginate';
-import { entrada } from './entradas.entity';
+import { Entradas } from './entradas.entity';
 import { CreateentradaDto } from './dto/create_entradas';
 import { UpdateentradaDto } from './dto/update_entradas';
 
 @Injectable()
 export class EntradasService {
   constructor(
-    @InjectRepository(entrada)
-    private readonly entradaRepository: Repository<entrada>,
+    @InjectRepository(Entradas)
+    private readonly entradaRepository: Repository<Entradas>,
   ) {}
 
-  async create(CreateentradaDto: CreateentradaDto): Promise<entrada | null> {
-    try {
-      const nuevaEntrada = this.entradaRepository.create(CreateentradaDto);
-      return await this.entradaRepository.save(nuevaEntrada);
-    } catch (err) {
-      console.error('Error al crear entrada:', err);
-      return null;
-    }
+  async create(dto: CreateentradaDto): Promise<Entradas> {
+    const nuevaEntrada = this.entradaRepository.create(dto);
+    return this.entradaRepository.save(nuevaEntrada);
   }
 
   async findAll(
     options: IPaginationOptions,
     isActive?: boolean,
-  ): Promise<Pagination<entrada> | null> {
-    try {
-      const query = this.entradaRepository.createQueryBuilder('entrada');
-      if (isActive !== undefined) {
-        query.where('entrada.disponibilidad = :isActive', { isActive });
-      }
-      return await paginate<entrada>(query, options);
-    } catch (err) {
-      console.error('Error al listar entradas:', err);
-      return null;
+  ): Promise<Pagination<Entradas>> {
+    const query = this.entradaRepository.createQueryBuilder('entrada');
+    if (isActive !== undefined) {
+      query.where('entrada.disponibilidad = :isActive', { isActive });
     }
+    return paginate<Entradas>(query, options);
   }
 
-  async findOne(id: string): Promise<entrada | null> {
-    try {
-      return await this.entradaRepository.findOne({ where: { id } });
-    } catch (err) {
-      console.error('Error al buscar entrada:', err);
-      return null;
-    }
+  async findOne(id: string): Promise<Entradas | null> {
+    return this.entradaRepository.findOne({ where: { id } });
   }
 
-  async findByNombre(nombre: string): Promise<entrada | null> {
-    try {
-      return await this.entradaRepository.findOne({ where: { nombre } });
-    } catch (err) {
-      console.error('Error al buscar entrada por nombre:', err);
-      return null;
-    }
+  async update(id: string, dto: UpdateentradaDto): Promise<Entradas | null> {
+    const entrada = await this.entradaRepository.findOne({ where: { id } });
+    if (!entrada) return null;
+
+    Object.assign(entrada, dto);
+    return this.entradaRepository.save(entrada);
   }
 
-  async update(id: string, UpdateentradaDto: UpdateentradaDto): Promise<entrada | null> {
-    try {
-      const entradaExistente = await this.entradaRepository.findOne({ where: { id } });
-      if (!entradaExistente) return null;
+  async remove(id: string): Promise<Entradas | null> {
+    const entrada = await this.findOne(id);
+    if (!entrada) return null;
 
-      Object.assign(entradaExistente, UpdateentradaDto);
-      return await this.entradaRepository.save(entradaExistente);
-    } catch (err) {
-      console.error('Error al actualizar entrada:', err);
-      return null;
-    }
+    return this.entradaRepository.remove(entrada);
   }
 
-  async remove(id: string): Promise<entrada | null> {
-    try {
-      const entrada = await this.findOne(id);
-      if (!entrada) return null;
+  async updateProfile(id: string, filename: string): Promise<Entradas | null> {
+    const entrada = await this.findOne(id);
+    if (!entrada) return null;
 
-      return await this.entradaRepository.remove(entrada);
-    } catch (err) {
-      console.error('Error al eliminar entrada:', err);
-      return null;
-    }
-  }
-
-  async updateProfile(id: string, filename: string): Promise<entrada | null> {
-    try {
-      const entrada = await this.findOne(id);
-      if (!entrada) return null;
-
-      entrada.profile = filename;
-      return await this.entradaRepository.save(entrada);
-    } catch (err) {
-      console.error('Error al actualizar imagen de entrada:', err);
-      return null;
-    }
+    entrada.profile = filename;
+    return this.entradaRepository.save(entrada);
   }
 }

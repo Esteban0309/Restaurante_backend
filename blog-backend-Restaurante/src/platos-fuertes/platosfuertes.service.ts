@@ -11,91 +11,52 @@ import { CreatePlatoFuerteDto } from './dto/create_platosfuertes';
 import { UpdatePlatoFuerteDto } from './dto/update_platosfuertes';
 
 @Injectable()
-export class PlatoFuerteService {
+export class platosfuertesService {
   constructor(
     @InjectRepository(PlatoFuerte)
-    private readonly platoFuerteRepository: Repository<PlatoFuerte>,
+    private readonly platosfuertesRepository: Repository<PlatoFuerte>,
   ) {}
 
-  async create(createPlatoFuerteDto: CreatePlatoFuerteDto): Promise<PlatoFuerte | null> {
-    try {
-      const nuevoPlato = this.platoFuerteRepository.create(createPlatoFuerteDto);
-      return await this.platoFuerteRepository.save(nuevoPlato);
-    } catch (err) {
-      console.error('Error al crear plato fuerte:', err);
-      return null;
-    }
+  async create(dto: CreatePlatoFuerteDto): Promise<PlatoFuerte> {
+    const nuevaplatosfuertes = this.platosfuertesRepository.create(dto);
+    return this.platosfuertesRepository.save(nuevaplatosfuertes);
   }
 
   async findAll(
     options: IPaginationOptions,
     isActive?: boolean,
-  ): Promise<Pagination<PlatoFuerte> | null> {
-    try {
-      const query = this.platoFuerteRepository.createQueryBuilder('plato');
-      if (isActive !== undefined) {
-        query.where('plato.disponibilidad = :isActive', { isActive });
-      }
-      return await paginate<PlatoFuerte>(query, options);
-    } catch (err) {
-      console.error('Error al listar platos fuertes:', err);
-      return null;
+  ): Promise<Pagination<PlatoFuerte>> {
+    const query = this.platosfuertesRepository.createQueryBuilder('platosfuertes');
+    if (isActive !== undefined) {
+      query.where('platosfuertes.disponibilidad = :isActive', { isActive });
     }
+    return paginate<PlatoFuerte>(query, options);
   }
 
-  async findOne(id: number): Promise<PlatoFuerte | null> {
-    try {
-      return await this.platoFuerteRepository.findOne({ where: { id } });
-    } catch (err) {
-      console.error('Error al buscar plato fuerte:', err);
-      return null;
-    }
+  async findOne(id: string): Promise<PlatoFuerte | null> {
+    return this.platosfuertesRepository.findOne({ where: { id } });
   }
 
-  async findByNombre(nombre: string): Promise<PlatoFuerte | null> {
-    try {
-      return await this.platoFuerteRepository.findOne({ where: { nombre } });
-    } catch (err) {
-      console.error('Error al buscar por nombre:', err);
-      return null;
-    }
+  async update(id: string, dto: UpdatePlatoFuerteDto): Promise<PlatoFuerte | null> {
+    const platosfuertes = await this.platosfuertesRepository.findOne({ where: { id } });
+    if (!platosfuertes) return null;
+
+    Object.assign(platosfuertes, dto);
+    return this.platosfuertesRepository.save(platosfuertes);
   }
 
-  async update(id: number, updatePlatoFuerteDto: UpdatePlatoFuerteDto): Promise<PlatoFuerte | null> {
-    try {
-      const plato = await this.platoFuerteRepository.findOne({ where: { id } });
-      if (!plato) return null;
+  async remove(id: string): Promise<PlatoFuerte | null> {
+    const platosfuertes = await this.findOne(id);
+    if (!platosfuertes) return null;
 
-      Object.assign(plato, updatePlatoFuerteDto);
-      return await this.platoFuerteRepository.save(plato);
-    } catch (err) {
-      console.error('Error al actualizar plato fuerte:', err);
-      return null;
-    }
+    return this.platosfuertesRepository.remove(platosfuertes);
   }
 
-  async remove(id: number): Promise<PlatoFuerte | null> {
-    try {
-      const plato = await this.findOne(id);
-      if (!plato) return null;
+  async updateProfile(id: string, filename: string): Promise<PlatoFuerte | null> {
+    const platosfuertes = await this.findOne(id);
+    if (!platosfuertes) return null;
 
-      return await this.platoFuerteRepository.remove(plato);
-    } catch (err) {
-      console.error('Error al eliminar plato fuerte:', err);
-      return null;
-    }
-  }
-
-  async updateProfile(id: number, filename: string): Promise<PlatoFuerte | null> {
-    try {
-      const plato = await this.findOne(id);
-      if (!plato) return null;
-
-      plato.profile = filename;
-      return await this.platoFuerteRepository.save(plato);
-    } catch (err) {
-      console.error('Error al actualizar imagen del plato:', err);
-      return null;
-    }
+    platosfuertes.profile = filename;
+    return this.platosfuertesRepository.save(platosfuertes);
   }
 }

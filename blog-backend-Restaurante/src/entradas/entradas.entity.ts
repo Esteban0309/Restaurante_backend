@@ -1,14 +1,17 @@
+import { Type } from 'class-transformer';
+import { IsNumber } from 'class-validator';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('entradas') // usa un nombre más específico que 'posts'
-export class entrada {
-  @PrimaryGeneratedColumn('uuid')
+export class Entradas {
+  @PrimaryGeneratedColumn()
   id: string;
 
   @Column()
   nombre: string;
 
-  @Column()
+  @Type(() => Number)
+  @IsNumber({ maxDecimalPlaces: 2 }, { message: 'precio must be a valid decimal number with up to 2 decimal places' })
   precio: number;
 
   @Column()

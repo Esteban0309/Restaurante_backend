@@ -7,8 +7,8 @@ import {
   Pagination,
 } from 'nestjs-typeorm-paginate';
 import { Postre } from './postres.entity';
-import { CreatepostreDto } from './dto/create_postres';
-import { UpdatepostreDto } from './dto/update_postres';
+import { CreatePostreDto } from './dto/create_postres';
+import { UpdatePostreDto } from './dto/update_postres';
 
 @Injectable()
 export class PostresService {
@@ -17,7 +17,7 @@ export class PostresService {
     private readonly postreRepository: Repository<Postre>,
   ) {}
 
-  async create(dto: CreatepostreDto): Promise<Postre | null> {
+  async create(dto: CreatePostreDto): Promise<Postre | null> {
     try {
       const nuevoPostre = this.postreRepository.create(dto);
       return await this.postreRepository.save(nuevoPostre);
@@ -62,7 +62,7 @@ export class PostresService {
     }
   }
 
-  async update(id: string, dto: UpdatepostreDto): Promise<Postre | null> {
+  async update(id: string, dto: UpdatePostreDto): Promise<Postre | null> {
     try {
       const postre = await this.findOne(id);
       if (!postre) return null;

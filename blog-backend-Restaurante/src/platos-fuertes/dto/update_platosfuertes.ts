@@ -1,24 +1,27 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { IsString, IsNumber, IsOptional, IsBoolean } from 'class-validator';
 
-
-@Entity()
 export class UpdatePlatoFuerteDto {
-  @PrimaryGeneratedColumn('uuid')
+  @IsOptional()
+  @IsString()
   nombre?: string;
 
-  @Column('decimal')
+  @IsOptional()
+  @IsNumber()
   precio?: number;
 
-  @Column()
+  @IsOptional()
+  @IsString()
   tipo?: string;
 
-  @Column()
+  @IsOptional()
+  @IsString()
   descripcion?: string;
-  
-  @Column({ nullable: true })
-  Porciones?: string; 
 
-  @Column({ default: true })
+  @IsOptional()
+  @IsString()
+  Porciones?: string;
+
+  @IsOptional()
+  @IsBoolean()
   disponibilidad?: boolean;
-
 }

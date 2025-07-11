@@ -2,13 +2,13 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('platosfuertes')
 export class PlatoFuerte {
-  @PrimaryGeneratedColumn()
-  id: number;
-  
-  @Column({ type: 'varchar', length: 100 })
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
   nombre: string;
 
-  @Column({ type: 'float' })
+  @Column('decimal')
   precio: number;
 
   @Column()
@@ -18,7 +18,7 @@ export class PlatoFuerte {
   descripcion: string;
 
   @Column({ nullable: true })
-  porciones: string;
+  Porciones: string;
 
   @Column({ default: true })
   disponibilidad: boolean;

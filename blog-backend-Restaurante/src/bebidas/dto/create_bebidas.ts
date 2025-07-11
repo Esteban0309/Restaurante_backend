@@ -1,22 +1,22 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { IsString, IsNumber, IsBoolean, IsOptional } from 'class-validator';
+import { Type } from 'class-transformer';
 
-
-@Entity('posts')
 export class CreatebebidaDto {
-  @PrimaryGeneratedColumn('uuid')
+  @IsString()
   nombre: string;
 
-  @Column()
+  @Type(() => Number)
+  @IsNumber({ maxDecimalPlaces: 2 }, { message: 'mas de dos decimales' })
   precio: number;
 
-  @Column()
+  @IsString()
   tipo: string;
 
-  @Column()
-  descripcion: string;
+  @IsString()
+  @IsOptional()
+  descripcion?: string;
 
-  @Column({ default: true })
-  disponibilidad: boolean;
-
+  @IsBoolean()
+  @IsOptional()
+  disponibilidad?: boolean;
 }
-

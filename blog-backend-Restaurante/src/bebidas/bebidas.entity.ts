@@ -1,14 +1,17 @@
+import { Type } from 'class-transformer';
+import { IsNumber } from 'class-validator';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
-@Entity('bebidas') // 
-export class bebida {
+@Entity() // 
+export class Bebidas {
   @PrimaryGeneratedColumn()
   id: string;
 
   @Column()
   nombre: string;
 
-  @Column()
+  @Type(() => Number)
+  @IsNumber({ maxDecimalPlaces: 2 }, { message: 'precio must be a valid decimal number with up to 2 decimal places' })
   precio: number;
 
   @Column()

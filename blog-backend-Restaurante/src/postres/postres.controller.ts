@@ -10,15 +10,15 @@ import { Pagination } from 'nestjs-typeorm-paginate';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { Postre } from './postres.entity';
-import { CreatepostreDto } from './dto/create_postres';
-import { UpdatepostreDto } from './dto/update_postres';
+import { CreatePostreDto } from './dto/create_postres';
+import { UpdatePostreDto } from './dto/update_postres';
 
 @Controller('Postres')
 export class PostresController {
   constructor(private readonly PostresService: PostresService) { }
 
   @Post()
-  async create(@Body() dto: CreatepostreDto) {
+  async create(@Body() dto: CreatePostreDto) {
     const Postre = await this.PostresService.create(dto);
     return new SuccessResponseDto('Postre created successfully', Postre);
   }
@@ -46,7 +46,7 @@ export class PostresController {
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() dto: UpdatepostreDto) {
+  async update(@Param('id') id: string, @Body() dto: UpdatePostreDto) {
     const Postre = await this.PostresService.update(id, dto);
     if (!Postre) throw new NotFoundException('Postre not found');
     return new SuccessResponseDto('Postre updated successfully', Postre);

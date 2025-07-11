@@ -6,96 +6,57 @@ import {
   IPaginationOptions,
   Pagination,
 } from 'nestjs-typeorm-paginate';
-import { bebida } from './bebidas.entity';
+import { Bebidas } from './bebidas.entity';
 import { CreatebebidaDto } from './dto/create_bebidas';
 import { UpdatebebidaDto } from './dto/update_bebidas';
 
 @Injectable()
-export class bebidasService {
+export class BebidasService {
   constructor(
-    @InjectRepository(bebida)
-    private readonly bebidaRepository: Repository<bebida>,
+    @InjectRepository(Bebidas)
+    private readonly bebidasRepository: Repository<Bebidas>,
   ) {}
 
-  async create(createbebidaDto: CreatebebidaDto): Promise<bebida | null> {
-    try {
-      const nuevaBebida = this.bebidaRepository.create(createbebidaDto);
-      return await this.bebidaRepository.save(nuevaBebida);
-    } catch (err) {
-      console.error('Error creating bebida:', err);
-      return null;
-    }
+  async create(createbebidaDto: CreatebebidaDto): Promise<Bebidas> {
+    const nuevaBebida = this.bebidasRepository.create(createbebidaDto);
+    return await this.bebidasRepository.save(nuevaBebida);
   }
 
   async findAll(
     options: IPaginationOptions,
     isActive?: boolean,
-  ): Promise<Pagination<bebida> | null> {
-    try {
-      const query = this.bebidaRepository.createQueryBuilder('bebida');
-      if (isActive !== undefined) {
-        query.where('bebida.disponibilidad = :isActive', { isActive });
-      }
-      return await paginate<bebida>(query, options);
-    } catch (err) {
-      console.error('Error retrieving bebidas:', err);
-      return null;
+  ): Promise<Pagination<Bebidas>> {
+    const query = this.bebidasRepository.createQueryBuilder('bebida');
+    if (isActive !== undefined) {
+      query.where('bebida.disponibilidad = :isActive', { isActive });
     }
+    return await paginate<Bebidas>(query, options);
   }
 
-  async findOne(id: string): Promise<bebida | null> {
-    try {
-      return await this.bebidaRepository.findOne({ where: { id } });
-    } catch (err) {
-      console.error('Error finding bebida:', err);
-      return null;
-    }
+  async findOne(id: string): Promise<Bebidas | null> {
+    return await this.bebidasRepository.findOne({ where: { id } });
   }
 
-  async findByNombre(nombre: string): Promise<bebida | null> {
-    try {
-      return await this.bebidaRepository.findOne({ where: { nombre } });
-    } catch (err) {
-      console.error('Error finding bebida by nombre:', err);
-      return null;
-    }
+  async update(id: string, updatebebidaDto: UpdatebebidaDto): Promise<Bebidas | null> {
+    const bebidaExistente = await this.bebidasRepository.findOne({ where: { id } });
+    if (!bebidaExistente) return null;
+
+    Object.assign(bebidaExistente, updatebebidaDto);
+    return this.bebidasRepository.save(bebidaExistente);
   }
 
-  async update(id: string, updatebebidaDto: UpdatebebidaDto): Promise<bebida | null> {
-    try {
-      const bebidaExistente = await this.bebidaRepository.findOne({ where: { id } });
-      if (!bebidaExistente) return null;
+  async remove(id: string): Promise<Bebidas | null> {
+    const bebida = await this.findOne(id);
+    if (!bebida) return null;
 
-      Object.assign(bebidaExistente, updatebebidaDto);
-      return this.bebidaRepository.save(bebidaExistente);
-    } catch (err) {
-      console.error('Error updating bebida:', err);
-      return null;
-    }
+    return await this.bebidasRepository.remove(bebida);
   }
 
-  async remove(id: string): Promise<bebida | null> {
-    try {
-      const bebida = await this.findOne(id);
-      if (!bebida) return null;
+  async updateProfile(id: string, filename: string): Promise<Bebidas | null> {
+    const bebida = await this.findOne(id);
+    if (!bebida) return null;
 
-      return await this.bebidaRepository.remove(bebida);
-    } catch (err) {
-      console.error('Error deleting bebida:', err);
-      return null;
-    }
-  }
-
-  async updateProfile(id: string, filename: string): Promise<bebida | null> {
-    try {
-      const bebida = await this.findOne(id);
-      if (!bebida) return null;
-
-      bebida.profile = filename;
-      return await this.bebidaRepository.save(bebida);
-    } catch (err) {
-      console.error('Error updating bebida profile image:', err);
-      return null;
-    }
+    bebida.profile = filename;
+    return await this.bebidasRepository.save(bebida);
   }
 }
