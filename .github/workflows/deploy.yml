@@ -29,9 +29,9 @@ jobs:
         key: ${{ secrets.VPS_KEY }}
         script: |
           cd /root/corella_esteban/Restaurante_backend
-           # Matar el proceso que está usando el puerto 3000
-          echo "Matar proceso en el puerto 3000..."
-          sudo lsof -t -i:3000 | xargs sudo kill -9
+           # Matar el proceso que está usando el puerto 3015
+          echo "Matar proceso en el puerto 3015..."
+          sudo lsof -t -i:3015 | xargs sudo kill -9
           
           echo -e "${{ secrets.ENV_FILE }}" > .env
           npm install
