@@ -13,6 +13,7 @@ import { Entradas } from './entradas/entradas.entity';
 import { PaymentsModule } from './payments/payments.module';
 import { OrdersModule } from './orders/orders.module';
 import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
   imports: [
@@ -37,6 +38,6 @@ import { AppController } from './app.controller';
     OrdersModule,
   ],
   controllers: [AppController], // Sin PlatoFuerteController
-  providers: [], // Sin PlatoFuerteService
+  providers: [AppService], // Sin PlatoFuerteService
 })
 export class AppModule {}
