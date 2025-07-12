@@ -12,6 +12,7 @@ import { Bebidas } from './bebidas/bebidas.entity';
 import { Entradas } from './entradas/entradas.entity';
 import { PaymentsModule } from './payments/payments.module';
 import { OrdersModule } from './orders/orders.module';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -35,7 +36,7 @@ import { OrdersModule } from './orders/orders.module';
     PaymentsModule,
     OrdersModule,
   ],
-  controllers: [], // Sin PlatoFuerteController
+  controllers: [AppController], // Sin PlatoFuerteController
   providers: [], // Sin PlatoFuerteService
 })
 export class AppModule {}
