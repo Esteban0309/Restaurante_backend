@@ -10,7 +10,7 @@ export class Entradas {
   @Column()
   nombre: string;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   precio: number;
 
   @Column()
