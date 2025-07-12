@@ -10,7 +10,7 @@ export class CreateentradaDto {
   @IsString()
   nombre: string;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @IsNumber()
   precio: number;
 
   @IsString()

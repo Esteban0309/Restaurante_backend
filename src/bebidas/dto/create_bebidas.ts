@@ -3,18 +3,21 @@ import { Type } from 'class-transformer';
 import { Column } from 'typeorm';
 
 export class CreatebebidaDto {
+  @IsOptional()  // si quieres que sea opcional, sino eliminar esta línea
+  @IsString()
+  porciones?: string;
+
   @IsString()
   nombre: string;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @IsNumber()
   precio: number;
 
   @IsString()
   tipo: string;
 
   @IsString()
-  @IsOptional()
-  descripcion?: string;
+  descripcion: string;
 
   @IsBoolean()
   @IsOptional()

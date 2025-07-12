@@ -7,7 +7,7 @@ export class UpdatePostreDto {
   nombre?: string;
 
   @IsOptional()
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @IsNumber()
   precio?: number;
 
   @IsOptional()
