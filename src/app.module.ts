@@ -28,7 +28,7 @@ import { AppService } from './app.service';
       database: process.env.DB_NAME,
       entities: [PlatoFuerte, Postre, Bebidas, Entradas],
       synchronize: true,
-      // ssl: { rejectUnauthorized: false },
+      ssl: { rejectUnauthorized: false },
     }),
     PlatosFuertesModule,
     EntradasModule,
