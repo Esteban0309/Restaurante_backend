@@ -1,5 +1,6 @@
 import { Type } from 'class-transformer';
-import { IsBoolean, IsNumber, IsString, IsOptional } from 'class-validator';
+import { IsBoolean, IsNumber, IsString, IsOptional, IsDecimal } from 'class-validator';
+import { Column } from 'typeorm';
 
 export class CreateentradaDto {
   @IsOptional()  // si quieres que sea opcional, sino eliminar esta línea
@@ -9,8 +10,7 @@ export class CreateentradaDto {
   @IsString()
   nombre: string;
 
-  @Type(() => Number)
-  @IsNumber({ maxDecimalPlaces: 2 }, { message: 'precio must be a valid decimal number with up to 2 decimal places' })
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
   precio: number;
 
   @IsString()

@@ -1,21 +1,20 @@
 import { Type } from 'class-transformer';
-import { IsNumber } from 'class-validator';
+import { IsDecimal, IsNumber } from 'class-validator';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
 @Entity()
 export class UpdateentradaDto {
   @PrimaryGeneratedColumn()
-  nombre: string;
+  nombre?: string;
 
-  @Type(() => Number)
-  @IsNumber({ maxDecimalPlaces: 2 }, { message: 'precio must be a valid decimal number with up to 2 decimal places' })
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
   precio: number;
 
   @Column()
-  tipo: string;
+  tipo?: string;
 
   @Column()
-  descripcion: string;
+  descripcion?: string;
 
   @Column({ nullable: true })
   Porciones: string;

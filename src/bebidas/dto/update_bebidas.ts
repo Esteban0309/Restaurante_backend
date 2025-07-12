@@ -1,5 +1,6 @@
 import { Type } from 'class-transformer';
 import { IsOptional, IsString, IsNumber, IsBoolean } from 'class-validator';
+import { Column } from 'typeorm';
 
 export class UpdatebebidaDto {
   @IsOptional()
@@ -7,9 +8,8 @@ export class UpdatebebidaDto {
   nombre?: string;
 
   @IsOptional()
-  @Type(() => Number)
-  @IsNumber({ maxDecimalPlaces: 2 }, { message: 'precio must be a valid decimal number with up to 2 decimal places' })
-  precio?: number;
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  precio: number;
 
   @IsOptional()
   @IsString()

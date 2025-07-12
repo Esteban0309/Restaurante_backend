@@ -9,9 +9,9 @@ import {
   Query,
   BadRequestException,
   NotFoundException,
+  InternalServerErrorException,
   UseInterceptors,
   UploadedFile,
-  InternalServerErrorException,
 } from '@nestjs/common';
 import { EntradasService } from './entradas.service';
 import { CreateentradaDto } from './dto/create_entradas';
@@ -28,7 +28,20 @@ export class EntradasController {
 
   @Post()
   async create(@Body() dto: CreateentradaDto) {
+    // Convierte el precio a flotante si es necesario
+    const precioFlotante = parseFloat(dto.precio.toString());
+
+    // Verifica si el precio es un número válido
+    if (isNaN(precioFlotante)) {
+      throw new BadRequestException('El precio debe ser un número válido.');
+    }
+
+    // Actualiza el precio en el DTO para asegurarse de que es un número flotante
+    dto.precio = precioFlotante;
+
+    // Llamada al servicio para crear la entrada
     const entrada = await this.entradasService.create(dto);
+
     return new SuccessResponseDto('Entrada creada exitosamente', entrada);
   }
 

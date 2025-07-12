@@ -1,12 +1,12 @@
 import { IsString, IsNumber, IsBoolean, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
+import { Column } from 'typeorm';
 
 export class CreatebebidaDto {
   @IsString()
   nombre: string;
 
-  @Type(() => Number)
-  @IsNumber({ maxDecimalPlaces: 2 }, { message: 'mas de dos decimales' })
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
   precio: number;
 
   @IsString()

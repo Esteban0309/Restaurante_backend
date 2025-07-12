@@ -1,14 +1,15 @@
+import { IsDecimal } from 'class-validator';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('postres')
 export class Postre {
   @PrimaryGeneratedColumn()
-  id: string;  
+  id: string;
 
   @Column()
   nombre: string;
 
-  @Column()
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
   precio: number;
 
   @Column()

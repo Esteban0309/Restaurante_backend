@@ -1,4 +1,5 @@
 import { IsString, IsNumber, IsOptional, IsBoolean } from 'class-validator';
+import { Column } from 'typeorm';
 
 export class UpdatePostreDto {
   @IsOptional()
@@ -6,7 +7,7 @@ export class UpdatePostreDto {
   nombre?: string;
 
   @IsOptional()
-  @IsNumber()
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
   precio?: number;
 
   @IsOptional()

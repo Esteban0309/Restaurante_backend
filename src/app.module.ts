@@ -24,7 +24,7 @@ import { Entradas } from './entradas/entradas.entity';
       database: process.env.DB_NAME,
       entities: [PlatoFuerte, Postre, Bebidas, Entradas],
       synchronize: true,
-      ssl: { rejectUnauthorized: false },
+      // ssl: { rejectUnauthorized: false },
     }),
     PlatosFuertesModule,
     EntradasModule,

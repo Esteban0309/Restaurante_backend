@@ -1,3 +1,4 @@
+import { IsDecimal } from 'class-validator';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('platosfuertes')
@@ -8,7 +9,7 @@ export class PlatoFuerte {
   @Column()
   nombre: string;
 
-  @Column('decimal')
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
   precio: number;
 
   @Column()
