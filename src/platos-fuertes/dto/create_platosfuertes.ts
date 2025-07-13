@@ -15,6 +15,7 @@ export class CreatePlatoFuerteDto {
   @IsString()
   tipo: string;
 
+  @IsOptional()
   @IsString()
   descripcion: string;
 

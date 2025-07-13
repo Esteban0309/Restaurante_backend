@@ -16,6 +16,7 @@ export class CreateentradaDto {
   @IsString()
   tipo: string;
 
+  @IsOptional()
   @IsString()
   descripcion: string;
 

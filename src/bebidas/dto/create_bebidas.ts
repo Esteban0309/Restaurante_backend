@@ -16,6 +16,7 @@ export class CreatebebidaDto {
   @IsString()
   tipo: string;
 
+  @IsOptional()
   @IsString()
   descripcion: string;
 
