@@ -13,6 +13,7 @@ export class CreateVinoDto {
   @IsString()
   tipo: string;
 
+  @IsOptional()
   @IsString()
   descripcion: string;
 
