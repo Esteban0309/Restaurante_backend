@@ -20,8 +20,9 @@ export class Vino {
   @Prop({ required: true })
   tipo: string;
 
-  @Prop({ required: true })
-  descripcion: string;
+  @Prop({ required: false }) // o simplemente: @Prop()
+  descripcion?: string;
+
 
   @Prop()
   Porciones?: string;

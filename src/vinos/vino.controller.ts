@@ -4,12 +4,13 @@ import { CreateVinoDto } from './dto/create-vino.dto';
 
 @Controller('vinos')
 export class VinosController {
-  constructor(private readonly vinosService: VinosService) {}
+  constructor(private readonly vinosService: VinosService) { }
 
   @Post()
-  create(@Body() createVinoDto: CreateVinoDto) {
-    return this.vinosService.create(createVinoDto);
+  async create(@Body() body: CreateVinoDto) {
+    return this.vinosService.create(body);
   }
+
 
   @Get()
   findAll() {

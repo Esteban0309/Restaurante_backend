@@ -15,7 +15,7 @@ export class CreateVinoDto {
 
   @IsOptional()
   @IsString()
-  descripcion: string;
+  descripcion?: string;
 
   @IsOptional()
   @IsString()
