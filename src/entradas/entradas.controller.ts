@@ -12,6 +12,7 @@ import {
   InternalServerErrorException,
   UseInterceptors,
   UploadedFile,
+  UseGuards,
 } from '@nestjs/common';
 import { EntradasService } from './entradas.service';
 import { CreateentradaDto } from './dto/create_entradas';
@@ -21,30 +22,32 @@ import { Pagination } from 'nestjs-typeorm-paginate';
 import { Entradas } from './entradas.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('entradas')
 export class EntradasController {
   constructor(private readonly entradasService: EntradasService) {}
-
+  
+  @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() dto: CreateentradaDto) {
     // Convierte el precio a flotante si es necesario
     const precioFlotante = parseFloat(dto.precio.toString());
-
+    
     // Verifica si el precio es un número válido
     if (isNaN(precioFlotante)) {
       throw new BadRequestException('El precio debe ser un número válido.');
     }
-
+    
     // Actualiza el precio en el DTO para asegurarse de que es un número flotante
     dto.precio = precioFlotante;
 
     // Llamada al servicio para crear la entrada
     const entrada = await this.entradasService.create(dto);
-
+    
     return new SuccessResponseDto('Entrada creada exitosamente', entrada);
   }
-
+  
   @Get()
   async findAll(
     @Query('page') page = 1,
@@ -60,18 +63,18 @@ export class EntradasController {
         'Valor inválido para "isActive". Usa "true" o "false".',
       );
     }
-
+    
     const result = await this.entradasService.findAll(
       { page, limit },
       isActive === 'true' ? true : isActive === 'false' ? false : undefined,
     );
-
+    
     if (!result)
       throw new InternalServerErrorException('No se pudieron obtener las entradas');
-
+    
     return new SuccessResponseDto('Entradas obtenidas exitosamente', result);
   }
-
+  
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const entrada = await this.entradasService.findOne(id);
@@ -79,20 +82,23 @@ export class EntradasController {
     return new SuccessResponseDto('Entrada obtenida exitosamente', entrada);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put(':id')
   async update(@Param('id') id: string, @Body() dto: UpdateentradaDto) {
     const entrada = await this.entradasService.update(id, dto);
     if (!entrada) throw new NotFoundException('Entrada no encontrada');
     return new SuccessResponseDto('Entrada actualizada exitosamente', entrada);
   }
-
+  
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: string) {
     const entrada = await this.entradasService.remove(id);
     if (!entrada) throw new NotFoundException('Entrada no encontrada');
     return new SuccessResponseDto('Entrada eliminada exitosamente', entrada);
   }
-
+  
+  @UseGuards(JwtAuthGuard)
   @Put(':id/profile')
   @UseInterceptors(
     FileInterceptor('profile', {

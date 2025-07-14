@@ -10,10 +10,10 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { PlatoFuerte } from './platos-fuertes/platosfuertes.entity';
 import { Bebidas } from './bebidas/bebidas.entity';
 import { Entradas } from './entradas/entradas.entity';
-import { PaymentsModule } from './payments/payments.module';
 import { VinosModule } from './vinos/vino.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { UsersModule } from './users/user.module';
 
 @Module({
   imports: [
@@ -34,8 +34,8 @@ import { AppService } from './app.service';
     EntradasModule,
     PostresModule,
     BebidasModule,
-    PaymentsModule,
     VinosModule,
+    UsersModule
   ],
   controllers: [AppController], // Sin PlatoFuerteController
   providers: [AppService], // Sin PlatoFuerteService

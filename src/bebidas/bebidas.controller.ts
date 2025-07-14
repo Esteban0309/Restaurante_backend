@@ -12,6 +12,7 @@ import {
   UseInterceptors,
   UploadedFile,
   InternalServerErrorException,
+  UseGuards,
 } from '@nestjs/common';
 import { BebidasService } from './bebidas.service';
 import { CreatebebidaDto } from './dto/create_bebidas';
@@ -21,17 +22,19 @@ import { Pagination } from 'nestjs-typeorm-paginate';
 import { Bebidas } from './bebidas.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('bebidas')
 export class BebidasController {
-  constructor(private readonly bebidasService: BebidasService) {}
-
+  constructor(private readonly bebidasService: BebidasService) { }
+  
+  @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() dto: CreatebebidaDto) {
     const bebida = await this.bebidasService.create(dto);
     return new SuccessResponseDto('Bebida creada exitosamente', bebida);
   }
-
+  
   @Get()
   async findAll(
     @Query('page') page = 1,
@@ -47,39 +50,42 @@ export class BebidasController {
         'Valor inválido para "isActive". Usa "true" o "false".',
       );
     }
-
+    
     const result = await this.bebidasService.findAll(
       { page, limit },
       isActive === 'true' ? true : isActive === 'false' ? false : undefined,
     );
-
+    
     if (!result)
       throw new InternalServerErrorException('No se pudieron obtener las bebidas');
-
+    
     return new SuccessResponseDto('Bebidas obtenidas exitosamente', result);
   }
-
+  
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const bebida = await this.bebidasService.findOne(id);
     if (!bebida) throw new NotFoundException('Bebida no encontrada');
     return new SuccessResponseDto('Bebida obtenida exitosamente', bebida);
   }
-
+  
+  @UseGuards(JwtAuthGuard)
   @Put(':id')
   async update(@Param('id') id: string, @Body() dto: UpdatebebidaDto) {
     const bebida = await this.bebidasService.update(id, dto);
     if (!bebida) throw new NotFoundException('Bebida no encontrada');
     return new SuccessResponseDto('Bebida actualizada exitosamente', bebida);
   }
-
+  
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: string) {
     const bebida = await this.bebidasService.remove(id);
     if (!bebida) throw new NotFoundException('Bebida no encontrada');
     return new SuccessResponseDto('Bebida eliminada exitosamente', bebida);
   }
-
+  
+  @UseGuards(JwtAuthGuard)
   @Put(':id/profile')
   @UseInterceptors(
     FileInterceptor('profile', {
@@ -109,3 +115,4 @@ export class BebidasController {
     return new SuccessResponseDto('Imagen de perfil actualizada', bebida);
   }
 }
+

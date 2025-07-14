@@ -12,6 +12,7 @@ import {
   UseInterceptors,
   UploadedFile,
   InternalServerErrorException,
+  UseGuards,
 } from '@nestjs/common';
 import { platosfuertesService } from './platosfuertes.service';
 import { CreatePlatoFuerteDto } from './dto/create_platosfuertes';
@@ -21,11 +22,13 @@ import { Pagination } from 'nestjs-typeorm-paginate';
 import { PlatoFuerte } from './platosfuertes.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('platosfuertes')
 export class platosfuertesController {
-  constructor(private readonly platosfuertesService: platosfuertesService) {}
+  constructor(private readonly platosfuertesService: platosfuertesService) { }
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() dto: CreatePlatoFuerteDto) {
     const platofuerte = await this.platosfuertesService.create(dto);
@@ -66,6 +69,7 @@ export class platosfuertesController {
     return new SuccessResponseDto('platofuerte obtenida exitosamente', platofuerte);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put(':id')
   async update(@Param('id') id: number, @Body() dto: UpdatePlatoFuerteDto) {
     const platofuerte = await this.platosfuertesService.update(id, dto);
@@ -73,6 +77,7 @@ export class platosfuertesController {
     return new SuccessResponseDto('platofuerte actualizada exitosamente', platofuerte);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: number) {
     const platofuerte = await this.platosfuertesService.remove(id);
@@ -80,6 +85,7 @@ export class platosfuertesController {
     return new SuccessResponseDto('platofuerte eliminada exitosamente', platofuerte);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put(':id/profile')
   @UseInterceptors(
     FileInterceptor('profile', {

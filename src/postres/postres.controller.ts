@@ -12,6 +12,7 @@ import {
   UseInterceptors,
   UploadedFile,
   InternalServerErrorException,
+  UseGuards,
 } from '@nestjs/common';
 import { postresService } from './postres.service';
 import { CreatePostreDto } from './dto/create_postres';
@@ -21,17 +22,19 @@ import { Pagination } from 'nestjs-typeorm-paginate';
 import { Postre } from './postres.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('postres')
 export class postresController {
   constructor(private readonly postresService: postresService) {}
-
+  
+  @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() dto: CreatePostreDto) {
     const postre = await this.postresService.create(dto);
     return new SuccessResponseDto('postre creada exitosamente', postre);
   }
-
+  
   @Get()
   async findAll(
     @Query('page') page = 1,
@@ -47,39 +50,42 @@ export class postresController {
         'Valor inválido para "isActive". Usa "true" o "false".',
       );
     }
-
+    
     const result = await this.postresService.findAll(
       { page, limit },
       isActive === 'true' ? true : isActive === 'false' ? false : undefined,
     );
-
+    
     if (!result)
       throw new InternalServerErrorException('No se pudieron obtener las postres');
-
+    
     return new SuccessResponseDto('postres obtenidas exitosamente', result);
   }
-
+  
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const postre = await this.postresService.findOne(id);
     if (!postre) throw new NotFoundException('postre no encontrada');
     return new SuccessResponseDto('postre obtenida exitosamente', postre);
   }
-
+  
+  @UseGuards(JwtAuthGuard)
   @Put(':id')
   async update(@Param('id') id: string, @Body() dto: UpdatePostreDto) {
     const postre = await this.postresService.update(id, dto);
     if (!postre) throw new NotFoundException('postre no encontrada');
     return new SuccessResponseDto('postre actualizada exitosamente', postre);
   }
-
+  
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: string) {
     const postre = await this.postresService.remove(id);
     if (!postre) throw new NotFoundException('postre no encontrada');
     return new SuccessResponseDto('postre eliminada exitosamente', postre);
   }
-
+  
+  @UseGuards(JwtAuthGuard)
   @Put(':id/profile')
   @UseInterceptors(
     FileInterceptor('profile', {
@@ -110,3 +116,4 @@ export class postresController {
     return new SuccessResponseDto('Imagen de perfil actualizada', postre);
   }
 }
+
