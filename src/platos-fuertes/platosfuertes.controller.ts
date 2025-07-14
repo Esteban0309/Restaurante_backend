@@ -60,21 +60,21 @@ export class platosfuertesController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: number) {
     const platofuerte = await this.platosfuertesService.findOne(id);
     if (!platofuerte) throw new NotFoundException('platofuerte no encontrada');
     return new SuccessResponseDto('platofuerte obtenida exitosamente', platofuerte);
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() dto: UpdatePlatoFuerteDto) {
+  async update(@Param('id') id: number, @Body() dto: UpdatePlatoFuerteDto) {
     const platofuerte = await this.platosfuertesService.update(id, dto);
     if (!platofuerte) throw new NotFoundException('platofuerte no encontrada');
     return new SuccessResponseDto('platofuerte actualizada exitosamente', platofuerte);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
+  async remove(@Param('id') id: number) {
     const platofuerte = await this.platosfuertesService.remove(id);
     if (!platofuerte) throw new NotFoundException('platofuerte no encontrada');
     return new SuccessResponseDto('platofuerte eliminada exitosamente', platofuerte);
@@ -100,7 +100,7 @@ export class platosfuertesController {
     }),
   )
   async uploadProfile(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @UploadedFile() file: Express.Multer.File,
   ) {
     if (!file)

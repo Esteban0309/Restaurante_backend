@@ -33,11 +33,11 @@ export class platosfuertesService {
     return paginate<PlatoFuerte>(query, options);
   }
 
-  async findOne(id: string): Promise<PlatoFuerte | null> {
+  async findOne(id: number): Promise<PlatoFuerte | null> {
     return this.platosfuertesRepository.findOne({ where: { id } });
   }
 
-  async update(id: string, dto: UpdatePlatoFuerteDto): Promise<PlatoFuerte | null> {
+  async update(id: number, dto: UpdatePlatoFuerteDto): Promise<PlatoFuerte | null> {
     const platosfuertes = await this.platosfuertesRepository.findOne({ where: { id } });
     if (!platosfuertes) return null;
 
@@ -45,14 +45,14 @@ export class platosfuertesService {
     return this.platosfuertesRepository.save(platosfuertes);
   }
 
-  async remove(id: string): Promise<PlatoFuerte | null> {
+  async remove(id: number): Promise<PlatoFuerte | null> {
     const platosfuertes = await this.findOne(id);
     if (!platosfuertes) return null;
 
     return this.platosfuertesRepository.remove(platosfuertes);
   }
 
-  async updateProfile(id: string, filename: string): Promise<PlatoFuerte | null> {
+  async updateProfile(id: number, filename: string): Promise<PlatoFuerte | null> {
     const platosfuertes = await this.findOne(id);
     if (!platosfuertes) return null;
 

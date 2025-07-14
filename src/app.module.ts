@@ -11,7 +11,7 @@ import { PlatoFuerte } from './platos-fuertes/platosfuertes.entity';
 import { Bebidas } from './bebidas/bebidas.entity';
 import { Entradas } from './entradas/entradas.entity';
 import { PaymentsModule } from './payments/payments.module';
-import { OrdersModule } from './orders/orders.module';
+import { VinosModule } from './vinos/vino.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -35,7 +35,7 @@ import { AppService } from './app.service';
     PostresModule,
     BebidasModule,
     PaymentsModule,
-    OrdersModule,
+    VinosModule,
   ],
   controllers: [AppController], // Sin PlatoFuerteController
   providers: [AppService], // Sin PlatoFuerteService
