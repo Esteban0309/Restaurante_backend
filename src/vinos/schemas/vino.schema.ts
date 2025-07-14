@@ -11,10 +11,10 @@ export class Vino {
   @Prop({ required: true })
   nombre: string;
 
-  @Prop({ required: true, type: Number })
+  @Prop({ required: false, default: null })
   precioCopa: number;
-
-  @Prop({ required: true, type: Number })
+  
+  @Prop({ required: false, default: null })
   precioBotella: number;
 
   @Prop({ required: true })
