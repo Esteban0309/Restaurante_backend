@@ -39,12 +39,12 @@ export class UsersController {
 
         const user = await this.usersService.findByUsername(username);
         if (!user) {
-            throw new UnauthorizedException('Credenciales inválidas');
+            throw new UnauthorizedException('usuarios inválido');
         }
 
         const passwordMatches = await bcrypt.compare(password, user.password);
         if (!passwordMatches) {
-            throw new UnauthorizedException('Credenciales inválidas');
+            throw new UnauthorizedException('contraseña inválida');
         }
 
         const payload = { sub: user._id, username: user.username, role: user.role };
