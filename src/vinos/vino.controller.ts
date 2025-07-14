@@ -6,7 +6,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('vinos')
 export class VinosController {
-  constructor(private readonly vinosService: VinosService) {}
+  constructor(private readonly vinosService: VinosService) { }
 
   @UseGuards(JwtAuthGuard)
   @Post()
@@ -21,8 +21,13 @@ export class VinosController {
 
   @UseGuards(JwtAuthGuard)
   @Put(':id')
-  async update(@Param('id') id: string, @Body() body: UpdateVinoDto) {
-    return this.vinosService.update(id, body);
+  async update(@Param('id') id: string, @Body() updateVinoDto: UpdateVinoDto) {
+    try {
+      return await this.vinosService.update(id, updateVinoDto);
+    } catch (error) {
+      // Aquí puedes manejar errores o lanzarlos para que NestJS los capture
+      throw error;
+    }
   }
 
   @UseGuards(JwtAuthGuard)
@@ -30,4 +35,5 @@ export class VinosController {
   async remove(@Param('id') id: string) {
     return this.vinosService.remove(id);
   }
+
 }
