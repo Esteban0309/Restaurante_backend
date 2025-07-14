@@ -4,11 +4,13 @@ export class CreateVinoDto {
   @IsString()
   nombre: string;
 
+  @IsOptional()
   @IsNumber()
-  precioCopa: number;
-
+  precioCopa?: number | null;
+  
+  @IsOptional()
   @IsNumber()
-  precioBotella: number;
+  precioBotella?: number | null;
 
   @IsString()
   tipo: string;
