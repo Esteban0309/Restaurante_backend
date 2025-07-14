@@ -4,9 +4,16 @@ import { Model } from 'mongoose';
 import { Vino, VinoDocument } from './schemas/vino.schema';
 import { CreateVinoDto } from './dto/create-vino.dto';
 import { Counter, CounterDocument } from '../common/counter.schema';
+import { UpdateVinoDto } from './dto/update-vino.dto';
 
 @Injectable()
 export class VinosService {
+  update(id: string, body: UpdateVinoDto) {
+    throw new Error('Method not implemented.');
+  }
+  remove(id: string) {
+    throw new Error('Method not implemented.');
+  }
   constructor(
     @InjectModel(Vino.name) private vinoModel: Model<VinoDocument>,
     @InjectModel(Counter.name) private counterModel: Model<CounterDocument>,
