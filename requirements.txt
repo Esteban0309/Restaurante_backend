@@ -1,0 +1,18 @@
+# Core de Django y API Rest
+Django>=5.0,<5.1
+djangorestframework>=3.15,<3.16
+
+# Conector de Base de Datos para PostgreSQL
+psycopg2-binary>=2.9.9
+
+# Autenticación JWT de forma nativa
+djangorestframework-simplejwt>=5.3.1
+
+# Manejo de CORS (Seguridad de acceso desde Flutter/React)
+django-cors-headers>=4.3.1
+
+# Carga automática de variables de entorno desde el archivo .env
+python-dotenv>=1.0.1
+
+# Manejo de imágenes (Requerido por el ImageField del campo 'profile')
+Pillow>=10.2.0

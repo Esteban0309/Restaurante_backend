@@ -1,0 +1,66 @@
+name: 🚀 Deploy Restaurante Backend API to VPS Corella
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Copy project to VPS
+      uses: appleboy/scp-action@v0.1.3
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        key: ${{ secrets.VPS_KEY }}
+        source: "."
+        target: "/root/corella_esteban/Restaurante_backend"
+
+    - name: Run deploy commands on VPS
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        key: ${{ secrets.VPS_KEY }}
+        script: |
+          cd /root/corella_esteban/Restaurante_backend
+          
+          # Matar cualquier proceso viejo que use el puerto 3015
+          echo "Matar proceso en el puerto 3015..."
+          sudo lsof -t -i:3015 | xargs sudo kill -9 || true
+          
+          # Crear el archivo de variables de entorno
+          echo -e "${{ secrets.ENV_FILE }}" > .env
+          
+          # Configuración del Entorno Virtual de Python
+          echo "Configurando entorno virtual de Python..."
+          if [ ! -d "venv" ]; then
+            python3 -m venv venv
+          fi
+          source venv/bin/activate
+          
+          # Instalar dependencias y aplicar migraciones en la Base de Datos
+          echo "Instalando dependencias de Django..."
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          
+          echo "Ejecutando migraciones..."
+          python manage.py makemigrations restaurante || true
+          python manage.py migrate
+          
+          # Detener y limpiar instancias previas en PM2
+          echo "Reiniciando PM2 con Django..."
+          pm2 stop restaurante-api || true
+          pm2 delete restaurante-api || true
+          
+          # Iniciar Django usando PM2 interpretando el entorno virtual de Python
+          # Corre sobre el puerto 3015 en segundo plano de manera continua
+          pm2 start venv/bin/python --name "restaurante-api" -- manage.py runserver 0.0.0.0:3015
+          
+          # Guardar la lista de procesos de PM2 para que sobreviva a reinicios del VPS
+          pm2 save
