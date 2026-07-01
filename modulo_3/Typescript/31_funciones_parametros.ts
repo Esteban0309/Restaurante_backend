@@ -19,3 +19,31 @@ function repetir(texto: string, veces: number = 3): string {
 
 console.log(repetir("ha"));    // hahaha  (usa el default 3)
 console.log(repetir("ha", 5)); // hahahahaha
+
+// Ejemplo aplicado — constructor de mensajes de log
+
+type Nivel = "info" | "warn" | "error";
+
+function log(
+  mensaje: string,
+  nivel: Nivel = "info",
+  timestamp?: boolean
+): string {
+  const prefijos: Record<Nivel, string> = {
+    info:  "ℹ️  INFO ",
+    warn:  "⚠️  WARN ",
+    error: "❌ ERROR",
+  };
+
+  const hora = timestamp ? ` [${new Date().toISOString()}]` : "";
+  return `${prefijos[nivel]}${hora}: ${mensaje}`;
+}
+
+console.log(log("Servidor iniciado"));
+// ℹ️  INFO : Servidor iniciado
+
+console.log(log("Memoria alta", "warn"));
+// ⚠️  WARN : Memoria alta
+
+console.log(log("Conexión perdida", "error", true));
+// ❌ ERROR [2026-06-23T...]: Conexión perdida
