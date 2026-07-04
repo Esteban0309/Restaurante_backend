@@ -30,7 +30,7 @@ import UserProfileCard     from './components/UserProfileCard'*/
 // │  12  ProductCatalogList  — lista con renderizado condicional de items   │
 // │  13  UserProfileCard     — ejercicio: props complejas + rol             │
 // └──────────────────────────────────────────────────────────────────────────┘
-const PASO = 2
+const PASO = 17
 
 const fruits = [
   { name: 'Manzana', emoji: '🍎', calories: 52 },
@@ -48,7 +48,14 @@ const catalog = [
 export default function App() {
   const content =
     PASO ===  1 ? <WelcomeBanner /> :
-    PASO ===  2 ? <UserGreeting name="Ana García" occupation="Desarrolladora Frontend" /> :/*
+    PASO ===  2 ? <>
+    <UserGreeting 
+    name="Carlos LOpez Ruiz" 
+    occupation="Desarrolladora Frontend" /> 
+    <br/>
+    <UserGreeting
+    name="Esteban Corella"
+    ocupation="Desarrollador Fullstack" /> :/*
     PASO ===  3 ? <CurrentDateDisplay /> :
     PASO ===  4 ? (
       <div style={{ display: 'flex', gap: 12 }}>
@@ -104,6 +111,12 @@ export default function App() {
         bio="Desarrolladora fullstack con 5 años de experiencia."
       />
     ) :*/
+    // Hooks: useState
+    PASO === 14 ? <DigitalCounter initialValue={5} label="Cantidad de Servidores" step={3}/> :
+    PASO === 15 ? <UserProfileForm /> :
+    PASO === 16 ? <TaskManager /> :
+    // Kooks: UseEffect
+    PASO === 17 ? <DocumentTitle /> :
     <p style={{ color: '#e00' }}>Paso {PASO}: crea el componente primero</p>
 
   return (
